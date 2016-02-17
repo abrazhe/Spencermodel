@@ -48,18 +48,19 @@ initial {
     diam = 3
     L = 2
     insert na
-    //insert nas
+    // insert nas
 }
 for i = 0, 3 {
     dend[i] {
 	nseg = 20
 	diam = 3
 	L = 280
+	
 	insert hcno
 	insert klt
 	gkltbar_klt = 0.0027 // from Spencer et al., 2012, Table 3
 	insert kht
-	gkhtbar_kht = 0.0006 // from Spencer et al., 2012, Table 3
+	gkhtbar_kht = 0.0006 // from Spencer et al., 2012, Table 3	
     }
 }
 

@@ -1,0 +1,81 @@
+// Trying to reconstruct Spencer's model of Octopus cells (Spencer et al 2012)
+// using their article. Note that their model may not be appropriate
+// because real dendritic tree *violate* the Rall's '3/2' power low, so it  can
+// not be represented with a few unic cylinders. Don't know if it can cause
+// uncertaintes in currents.
+
+// Active conductances: | Soma {Gklt, Gkht, Gh}  | Dends {Gklt, Gh, Gsyn} |
+//                      | Axon {None -- myelin?} | Initial {Gna}          |
+
+// [Gh] Bal & Oertel, 2000 (params: celcius = 33, frac = 1)
+// [Gklt] Rothman & Manis, 2003 (params: celcius = 33, ek = -70, gkltbar = 0.0407)
+// [Ghlt] Rothman & Manis, 2003 (params: celcius = 33, ek = -70, gkltbar = 0.0061)
+// [Gna] 
+// [Gsyn] 
+
+
+// Their model includes values of parameters that mostly reflect experimentaly
+// observed in cat
+
+
+create soma, initial, axon, dend[4]
+
+objref stim
+
+soma {
+    nseg = 1
+    diam = 25
+    L = 25
+    insert hcno
+    insert klt
+    insert kht
+    
+    stim = new IClamp(.5)
+    stim.del = 5
+    stim.dur = 3
+    stim.amp = 0.5
+}
+
+axon {
+    nseg = 1
+    diam = 3
+    L = 30
+}
+
+initial {
+    nseg = 1
+    diam = 3
+    L = 2
+    insert na
+    //insert nas
+}
+for i = 0, 3 {
+    dend[i] {
+	nseg = 20
+	diam = 3
+	L = 280
+	insert hcno
+	insert klt
+	gkltbar_klt = 0.0027 // from Spencer et al., 2012, Table 3
+	insert kht
+	gkhtbar_kht = 0.0006 // from Spencer et al., 2012, Table 3
+    }
+}
+
+forall {
+    insert pas
+    e_pas = -62 // mV. Golding et al. 1999; Bal & Oertel 2001
+    g_pas = 0.002 // S/cm^2. Calculated from time constant and cell capasitance
+                 // values from Bal & Oertel, 2000; Bal & Baydas 2009
+    cm = 0.9 // uF/cm^2
+    Ra = 100 // mho*cm
+}
+
+
+connect initial(1), axon(0)
+connect axon(1), soma(0)
+for i = 0, 3 {
+    connect dend[i](0), soma(1)
+}
+
+tstop = 25

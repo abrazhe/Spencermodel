@@ -10,7 +10,8 @@
 // [Gh] Bal & Oertel, 2000 (params: celcius = 33, frac = 1)
 // [Gklt] Rothman & Manis, 2003 (params: celcius = 33, ek = -70, gkltbar = 0.0407)
 // [Ghlt] Rothman & Manis, 2003 (params: celcius = 33, ek = -70, gkltbar = 0.0061)
-// [Gna] 
+// [Gna] Rothman & Manis, 2003
+// [Gnas] Rothman et al. 1993 (referenced in Spencer et al. 2012)
 // [Gsyn] 
 
 

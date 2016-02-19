@@ -44,13 +44,14 @@ INITIAL {
     h = hinf
     m = minf
 }
+UNITSOFF
 DERIVATIVE states {
     params(v)
     m' = qt*(minf-m)/mtau
     h' = qt*(hinf-h)/htau
 }
 
-UNITSOFF
+
 PROCEDURE params(v) {
     
     LOCAL hlp

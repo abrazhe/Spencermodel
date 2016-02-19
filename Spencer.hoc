@@ -47,8 +47,8 @@ initial {
     nseg = 1
     diam = 3
     L = 2
-    insert na
-    // insert nas
+    //insert na
+    insert nas
 }
 for i = 0, 3 {
     dend[i] {

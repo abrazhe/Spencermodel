@@ -88,7 +88,7 @@ INITIAL {
 
 PROCEDURE states() {  :Computes state variables m, h, and n
 	trates(v)      :             at the current v and dt.
-	w = w + wexp*(winf-w) : What is w = w + w*exp()??? 
+	w = w + wexp*(winf-w)  
 	z = z + zexp*(zinf-z)
 VERBATIM
 	return 0;

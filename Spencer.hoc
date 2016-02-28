@@ -21,20 +21,18 @@
 
 create soma, initial, axon, dend[4]
 
-objref stim
+
 
 soma {
     nseg = 1
     diam = 25
     L = 25
-    insert hcno
-    insert klt
-    insert kht
+    //insert hcno
+    insert hs
     
-    stim = new IClamp(.5)
-    stim.del = 5
-    stim.dur = 3
-    stim.amp = 0.5
+    insert klt 
+    insert kht 
+    ek = -70
 }
 
 axon {
@@ -47,37 +45,121 @@ initial {
     nseg = 1
     diam = 3
     L = 2
-    //insert na
-    insert nas
+    insert nas gbar_nas = 4.244
+    ena = 55
 }
+
 for i = 0, 3 {
     dend[i] {
 	nseg = 20
 	diam = 3
 	L = 280
 	
-	insert hcno
-	insert klt
-	gkltbar_klt = 0.0027 // from Spencer et al., 2012, Table 3
-	insert kht
-	gkhtbar_kht = 0.0006 // from Spencer et al., 2012, Table 3	
+	insert hs 
+	ghbar_hs = 0.0006
+	
+	insert klt  ek = -70 
+	gbar_klt = 0.0027 // from Spencer et al., 2012, Table 3
+	
+	// -- THERE IS NO KHT CONDUCTANCE IN DENDS IN Spencer et al 2012 -- //
+	
     }
 }
 
 forall {
-    insert pas
-    e_pas = -62 // mV. Golding et al. 1999; Bal & Oertel 2001
-    g_pas = 0.002 // S/cm^2. Calculated from time constant and cell capasitance
-                 // values from Bal & Oertel, 2000; Bal & Baydas 2009
+    insert leak
+    //e_pas = -62 // mV. Golding et al. 1999; Bal & Oertel 2001
+    //g_pas = 0.002 // S/cm^2. Calculated from time constant and cell capasitance
+    // values from Bal & Oertel, 2000; Bal & Baydas 2009
+    
     cm = 0.9 // uF/cm^2
     Ra = 100 // mho*cm
 }
 
-
+ // -- CONNECT THINGS TOGETHER -- //
+ 
 connect initial(1), axon(0)
 connect axon(1), soma(0)
+
 for i = 0, 3 {
     connect dend[i](0), soma(1)
 }
 
-tstop = 25
+
+
+tstop = 50
+celsius = 37
+
+
+// -- SHOW VOLTAGE! -- //
+
+objref pic
+
+pic = new Graph()
+
+addplot(pic, 0)
+pic.size(4, 14, -70, 20)
+pic.addvar("soma.v(.5)", 3, 1)
+pic.addvar("initial.v(.5)", 2, 1)
+
+
+
+objref stim[5], stm, st[2]
+
+for i = 0, 4 { soma stim[i] = new IClamp(.5) }
+
+for i = 0, 1 { soma st[i] = new IClamp(.5) }
+
+soma stm = new IClamp(.5)
+
+proc stimtrain() { local amp, del, dur
+    amp = $1 // current pulses' amplitude
+    dur = $2 // current pulses' duration
+    del = $3 // time interval between current pulses
+    
+    for i = 0, 4 {
+	
+	stim[i].dur = dur
+	stim[i].amp = amp
+	stim[i].del = 5 + i*del
+    }
+    run()
+}
+
+proc stairs() { local amp1, amp2, dur1, dur2, interval, del  // current steps 1/2 superimposed
+    amp1 = $1
+    amp2 = $2
+    dur1 = $3
+    dur2 = $4
+    interval = $5
+    del = $6
+    
+    
+    st[0].amp = amp1 // nA
+    st[0].dur = dur1
+    st[0].del = del
+    
+    st[1].amp = amp2
+    st[1].dur = dur2
+    st[1].del = del + interval
+    
+    stm.amp = 0
+    for i =0, 4 { stim[i].amp = 0 }
+
+    run()
+}
+
+proc stm1() { local amp, dur, del
+    amp = $1
+    dur = $2
+    del = $3
+    
+   
+    stm.amp = amp
+    stm.dur = dur
+    stm.del = del
+    
+    for i =0, 1 { st[i].amp = 0 }
+    for i =0, 4 { stim[i].amp = 0 }
+    run()
+}

@@ -1,8 +1,11 @@
-: This model of Ih current is used in Spencer's model. They use equations
-: (1) tau_h(v) = (125*exp( 10.44*(v + 50) / (273.16 + T) )) / (1 + exp( 34.81*(v + 50) / (273.16 + T) ))
-: (2)  hinf(v) = 1 / (1 + exp( (v + 66)/7 )).
-: The first eqn is 'tau1 = ...' in this *.mod allowing (!) celcius = 33 and frac = 1 (!)
+COMMENT
+ This model of Ih current is used in Spencer's model. They use equations:
+ 
+(1)  tau_h(v) = (125*exp( 10.44*(v + 50) / (273.16 + T) )) / (1 + exp( 34.81*(v + 50) / (273.16 + T) ))
+(2)  hinf(v) = 1 / (1 + exp( (v + 66)/7 )).
 
+The first eqn is 'tau1 = ...' in this *.mod by setting (!) celsius = 33 and frac = 1 (!) But no temp correction if celsius = 33...
+ENDCOMMENT
 
 TITLE h current for Octopus cells of Cochlear Nucleus
 : From Bal and Oertel (2000)
@@ -76,7 +79,7 @@ DERIVATIVE states {
 
 PROCEDURE trates(v) {  
         LOCAL  qt
-        qt=q10^((celsius-33)/10)
+        qt=q10^((celsius-33)/10)  
 
         tau1 = bet1(v)/(qt*a01*(1+alp1(v)))
         tau2 = bet2(v)/(qt*a02*(1+alp2(v)))
@@ -85,7 +88,7 @@ PROCEDURE trates(v) {
 }
 
 FUNCTION alp1(v(mV)) {
-  alp1 = exp(1.e-3*zeta1*(v-vhalf1)*9.648e4/(8.315*(273.16+celsius))) 
+  alp1 = exp(1.e-3*zeta1*(v-vhalf1)*9.648e4/(8.315*(273.16+celsius)))
 }
 
 FUNCTION bet1(v(mV)) {

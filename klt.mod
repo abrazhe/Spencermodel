@@ -41,7 +41,7 @@ UNITS {
 NEURON {
         SUFFIX klt
         USEION k READ ek WRITE ik
-        RANGE gkltbar, gklt, ik
+        RANGE gbar, g, ik
         GLOBAL winf, zinf, wtau, ztau
 }
 
@@ -53,7 +53,7 @@ PARAMETER {
                      	: model is defined on measurements made at room temp in Baltimore
         dt (ms)
         ek = -70 (mV) :O (Bal&Oertel201; Rothman&Manis2003c) from Spencer et al., 2012
-        gkltbar = 0.0407 (mho/cm2) <0,1e9> :O value for soma (Bal & Oertel 2001) from Spencer et al., 2012
+        gbar = 0.0407 (mho/cm2) <0,1e9> :O value for soma (Bal & Oertel 2001) from Spencer et al., 2012. Dends have 0.0027
         zss = 0.5   <0,1>   : steady state inactivation of glt
 }
 
@@ -63,7 +63,7 @@ STATE {
 
 ASSIGNED {
     ik (mA/cm2) 
-    gklt (mho/cm2)
+    g (mho/cm2)
     winf zinf
     wtau (ms) ztau (ms)
     }
@@ -73,8 +73,8 @@ LOCAL wexp, zexp
 BREAKPOINT {
 	SOLVE states
     
-	gklt = gkltbar*(w^4)*z
-    ik = gklt*(v - ek)
+	g = gbar*(w^4)*z
+    ik = g*(v - ek)
 
 }
 

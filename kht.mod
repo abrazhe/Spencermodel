@@ -103,10 +103,10 @@ PROCEDURE rates(v) {  :Computes rate and other constants at current v.
 
 	q10 = 3^((celsius - 22)/10) : if you don't like room temp, it can be changed!
 
-    ninf =   (1 + exp(-(v + 15) / 5))^-0.5
+    ninf =  (1 + exp(-(v + 15) / 5))^-0.5
     pinf =  1 / (1 + exp(-(v + 23) / 6))
-
-	ntau =  (100 / (11*exp((v+60) / 24) + 21*exp(-(v+60) / 23))) + 0.7
+    
+    ntau = (100 / (11*exp((v+60) / 24) + 21*exp(-(v+60) / 23))) + 0.7
     ptau = (100 / (4*exp((v+60) / 32) + 5*exp(-(v+60) / 22))) + 5
 }
 
